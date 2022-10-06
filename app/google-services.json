@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "139234505196",
+    "project_id": "okidoc-9f102",
+    "storage_bucket": "okidoc-9f102.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:139234505196:android:f14c0127665e3aace4d0c9",
+        "android_client_info": {
+          "package_name": "com.sprtcoding.okidoc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "139234505196-v487tjj9foqf8udmm12kgj6qj32e8obp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAj3g45_ttpA11-QV93FbP5fsJ-HyOMuZY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "139234505196-v487tjj9foqf8udmm12kgj6qj32e8obp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:gravity="center"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/newBtn"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:fontFamily="@font/lora"
+        app:iconTint="@color/color3"
+        android:text="New Patient"
+        android:textColor="@color/color3"
+        android:textSize="20sp"
+        app:cornerRadius="5dp"
+        app:strokeColor="@color/color3" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/oldBtn"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:fontFamily="@font/lora"
+        app:iconTint="@color/color3"
+        android:text="Old Patient"
+        android:textColor="@color/color3"
+        android:textSize="20sp"
+        app:cornerRadius="5dp"
+        app:strokeColor="@color/color3" />
+
+</LinearLayout>

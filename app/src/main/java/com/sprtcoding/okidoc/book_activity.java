@@ -24,6 +24,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,9 +34,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class book_activity extends AppCompatActivity {
     private AutoCompleteTextView autoCompleteTextView, reasonCTV;
@@ -50,7 +58,9 @@ public class book_activity extends AppCompatActivity {
     private DatabaseReference bookRef, docNotificationRef, userRef;
     private CardView uploadPhoto;
     private LinearLayout uploadBtn;
+    private StorageReference storageReference;
     Uri MyUri;
+    private String myUri, bookID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +83,8 @@ public class book_activity extends AppCompatActivity {
         bookRef = mDb.getReference("Booking");
         docNotificationRef = mDb.getReference("DocNotification");
         userRef = mDb.getReference("Users");
+
+        storageReference = FirebaseStorage.getInstance().getReference("Image");
 
         clinicLocation.setText(clinicLocations);
         clinicName.setText(clinicNames);
@@ -176,7 +188,8 @@ public class book_activity extends AppCompatActivity {
                 Toast.makeText(this, "select time of booking", Toast.LENGTH_SHORT).show();
                 loadingBar.dismiss();
             }else {
-                String bookID = bookRef.push().getKey();
+                bookID = bookRef.push().getKey();
+                uploadImage();
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("who", whoTV);
                 map.put("Name", patientName);
@@ -201,9 +214,15 @@ public class book_activity extends AppCompatActivity {
         });
 
         uploadBtn.setOnClickListener(view -> {
-            Intent i = new Intent(Intent.ACTION_PICK);
-            i.setType("image/*");
-            startActivityForResult(i,SELECT_PHOTO);
+//            Intent i = new Intent(Intent.ACTION_PICK);
+//            i.setType("image/*");
+//            startActivityForResult(i,SELECT_PHOTO);
+
+            ImagePicker.Companion
+                    .with(this)		//Crop image(Optional), Check Customization for more option
+                    .compress(1024)			//Final image size will be less than 1 MB(Optional)
+                    .maxResultSize(1080, 1080)	//Final image resolution will be less than 1080 x 1080(Optional)
+                    .start(SELECT_PHOTO);
         });
 
         if(reasonCTV != null) {
@@ -240,7 +259,51 @@ public class book_activity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == SELECT_PHOTO && resultCode == RESULT_OK && data != null && data.getData() != null) {
             MyUri = data.getData();
-            filename.setText(patientName + "." + getFileExtension(MyUri));
+            String currentDate = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault()).format(new Date());
+            String currentTime = new SimpleDateFormat("hh:mm aa", Locale.getDefault()).format(new Date());
+            filename.setText(patientName + currentDate + currentTime + "." + getFileExtension(MyUri));
+        }
+    }
+
+    private void uploadImage() {
+        if(MyUri != null) {
+            String currentDate = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault()).format(new Date());
+            String currentTime = new SimpleDateFormat("hh:mm aa", Locale.getDefault()).format(new Date());
+            StorageReference imageRef = storageReference.child(patientName + currentDate + currentTime + "." + getFileExtension(MyUri));
+
+            if(reasonCTV.getText().toString().equals("Diagnosis")) {
+                imageRef.putFile(MyUri)
+                        .addOnCompleteListener(task -> {
+                            Toast.makeText(book_activity.this, "Image Saved Successfully!", Toast.LENGTH_SHORT).show();
+                            UploadTask uploadTask = imageRef.putFile(MyUri);
+
+                            uploadTask.continueWithTask((Continuation) task1 -> {
+
+                                if (!task.isSuccessful()) {
+                                    throw task.getException();
+                                }
+                                return imageRef.getDownloadUrl();
+                            }).addOnCompleteListener(task1 -> {
+                                if(task1.isSuccessful()) {
+                                    Uri downloadURI = (Uri) task1.getResult();
+                                    assert downloadURI != null;
+                                    myUri = downloadURI.toString();
+
+                                    HashMap<String, Object> hashMap = new HashMap<>();
+                                    hashMap.put("DiagnosisImage", myUri);
+                                    bookRef.child(docUID).child(mUser.getUid()).child(bookID).updateChildren(hashMap);
+                                    docNotificationRef.child(docUID).child(bookID).updateChildren(hashMap);
+                                }
+                            });
+
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
+            }
+
+        }else {
+            Toast.makeText(this, "No File Selected!", Toast.LENGTH_SHORT).show();
         }
     }
 

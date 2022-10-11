@@ -63,6 +63,7 @@
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
+            tools:listitem="@layout/doc_notif_layout"
             android:id="@+id/notif_recycle"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

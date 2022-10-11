@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,9 @@ public class PatientAppointmentFragment extends Fragment {
         RecyclerView book_recycle = v.findViewById(R.id.book_recycle);
 
         linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        linearLayoutManager.setSmoothScrollbarEnabled(true);
         book_recycle.setHasFixedSize(true);
         book_recycle.setLayoutManager(linearLayoutManager);
 
@@ -89,6 +93,8 @@ public class PatientAppointmentFragment extends Fragment {
                             bookingModels.add(appointment);
                         }
                         appointmentAdapter = new AppointmentAdapter(getContext(), bookingModels);
+                        book_recycle.scrollToPosition(bookingModels.size()-1);
+                        new Handler().postDelayed(() -> book_recycle.smoothScrollToPosition(bookingModels.size()-1),350);
                         book_recycle.setAdapter(appointmentAdapter);
                     }else {
                         book_recycle.setVisibility(View.GONE);

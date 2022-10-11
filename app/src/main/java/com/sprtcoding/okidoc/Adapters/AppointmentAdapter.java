@@ -1,8 +1,11 @@
 package com.sprtcoding.okidoc.Adapters;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,17 +13,29 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.sprtcoding.okidoc.Model.BookingModel;
 import com.sprtcoding.okidoc.R;
+import com.sprtcoding.okidoc.book_activity;
 
 import java.util.List;
 
 public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.myViewHolder> {
     private Context mContext;
     List<BookingModel> bookingModels;
+    String docUID = "vkWUXCFaWJdRZBBBzGwgAb8vtTn1";
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+    private FirebaseDatabase mDb;
+    private DatabaseReference bookRef, docNotificationRef;
+    private ProgressDialog loadingBar;
 
     public AppointmentAdapter(Context mContext, List<BookingModel> bookingModels) {
         this.mContext = mContext;
@@ -37,6 +52,18 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
     @SuppressLint({"SetTextI18n"})
     @Override
     public void onBindViewHolder(@NonNull myViewHolder holder, int position) {
+        loadingBar = new ProgressDialog(mContext);
+        loadingBar.setTitle("Loading");
+        loadingBar.setMessage("Please wait...");
+        loadingBar.setCanceledOnTouchOutside(true);
+
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+
+        mDb = FirebaseDatabase.getInstance();
+        bookRef = mDb.getReference("Booking");
+        docNotificationRef = mDb.getReference("DocNotification");
+
         BookingModel appointment = bookingModels.get(position);
         holder.date.setText(appointment.getDateOfBooking());
         holder.time.setText(appointment.getTimeOfBooking());
@@ -55,11 +82,39 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
             holder.myBtn.setTextColor(Color.rgb(6, 190, 222));
             holder.myBtn.setIconTintResource(R.color.color3);
             holder.myBtn.setOnClickListener(view -> {
-                Toast.makeText(mContext, "Book Again", Toast.LENGTH_SHORT).show();
+                loadingBar.show();
+                android.os.Handler handler = new Handler();
+                handler.postDelayed(() -> {
+                    loadingBar.dismiss();
+                    Intent i = new Intent(mContext, book_activity.class);
+                    mContext.startActivity(i);
+                }, 3000);
             });
         }else {
             holder.myBtn.setOnClickListener(view -> {
-                Toast.makeText(mContext, "cancel", Toast.LENGTH_SHORT).show();
+                loadingBar.show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setTitle("Cancel")
+                        .setMessage("Are you sure you want to cancel your booking?")
+                        .setCancelable(true)
+                        .setPositiveButton("Yes", (dialogInterface, i) -> {
+                            android.os.Handler handler = new Handler();
+                            handler.postDelayed(() -> {
+                                bookRef.child(docUID).child(mUser.getUid()).child(appointment.getBookID()).removeValue()
+                                        .addOnCompleteListener(task -> {
+                                            if(task.isSuccessful()) {
+                                                loadingBar.dismiss();
+                                                docNotificationRef.child(docUID).child(appointment.getBookID()).removeValue();
+                                                Toast.makeText(mContext, "Booking Cancel Successfully.", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            }, 3000);
+                        })
+                        .setNegativeButton("No", (dialogInterface, i) -> {
+                            loadingBar.dismiss();
+                            dialogInterface.cancel();
+                        })
+                        .show();
             });
         }
     }

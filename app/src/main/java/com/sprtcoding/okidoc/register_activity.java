@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.HashMap;
 
@@ -25,7 +26,7 @@ public class register_activity extends AppCompatActivity {
     private ProgressDialog loadingBar, signupLoading;
     private FirebaseAuth mAuth;
     private FirebaseDatabase mDb;
-    private DatabaseReference userRef;
+    private DatabaseReference userRef, tokenRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,7 @@ public class register_activity extends AppCompatActivity {
         //firebase realtime db instance
         mDb = FirebaseDatabase.getInstance();
         userRef = mDb.getReference("Users");
+        tokenRef = mDb.getReference("UserToken");
 
         signupLoading = new ProgressDialog(register_activity.this);
         signupLoading.setTitle("Creating Account");
@@ -100,6 +102,19 @@ public class register_activity extends AppCompatActivity {
                             .addOnCompleteListener(task -> {
                                 if(task.isSuccessful()) {
                                     FirebaseUser mUser = mAuth.getCurrentUser();
+
+                                    FirebaseMessaging.getInstance().getToken()
+                                            .addOnCompleteListener(task1 -> {
+                                                if (!task1.isSuccessful()) {
+                                                    Toast.makeText(register_activity.this, "Fetching FCM registration token failed" + task.getException(), Toast.LENGTH_SHORT).show();
+                                                    return;
+                                                }
+
+                                                // Get new FCM registration token
+                                                String token = task1.getResult();
+                                                tokenRef.child(mAuth.getCurrentUser().getUid()).child("token").setValue(token);
+                                            });
+
                                     HashMap<String, Object> hashMap = new HashMap<>();
                                     assert mUser != null;
                                     hashMap.put("UID", mUser.getUid());

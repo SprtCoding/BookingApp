@@ -1,13 +1,16 @@
 package com.sprtcoding.okidoc.Adapters;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,6 +40,7 @@ public class DocNotificationAdapter extends RecyclerView.Adapter<DocNotification
         return new myViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull myViewHolder holder, int position) {
         loadingBar = new ProgressDialog(mContext);
@@ -47,24 +51,32 @@ public class DocNotificationAdapter extends RecyclerView.Adapter<DocNotification
         BookingModel appointment = bookingModels.get(position);
         holder.name.setText(appointment.getName());
 
-        holder.openBtn.setOnClickListener(view -> {
-            loadingBar.show();
-            android.os.Handler handler = new Handler();
-            handler.postDelayed(() -> {
-                loadingBar.dismiss();
-                Intent i = new Intent(mContext, open_details.class);
-                i.putExtra("name", appointment.getName());
-                i.putExtra("reason", appointment.getReason());
-                i.putExtra("status", appointment.getStatus());
-                i.putExtra("date", appointment.getDateOfBooking());
-                i.putExtra("time", appointment.getTimeOfBooking());
-                i.putExtra("bookID", appointment.getBookID());
-                i.putExtra("userID", appointment.getUserID());
-                i.putExtra("who", appointment.getWho());
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mContext.startActivity(i);
-            }, 3000);
-        });
+        if(appointment.getStatus().equals("Approved")) {
+            holder.status.setText(appointment.getStatus());
+            holder.openBtn.setText("View Details");
+            holder.openBtn.setTextColor(Color.rgb(6, 190, 222));
+            holder.openBtn.setIconTintResource(R.color.color3);
+            holder.openBtn.setOnClickListener(view -> Toast.makeText(mContext, "View Details", Toast.LENGTH_SHORT).show());
+        }else {
+            holder.openBtn.setOnClickListener(view -> {
+                loadingBar.show();
+                android.os.Handler handler = new Handler();
+                handler.postDelayed(() -> {
+                    loadingBar.dismiss();
+                    Intent i = new Intent(mContext, open_details.class);
+                    i.putExtra("name", appointment.getName());
+                    i.putExtra("reason", appointment.getReason());
+                    i.putExtra("status", appointment.getStatus());
+                    i.putExtra("date", appointment.getDateOfBooking());
+                    i.putExtra("time", appointment.getTimeOfBooking());
+                    i.putExtra("bookID", appointment.getBookID());
+                    i.putExtra("userID", appointment.getUserID());
+                    i.putExtra("who", appointment.getWho());
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    mContext.startActivity(i);
+                }, 3000);
+            });
+        }
 
     }
 
@@ -73,13 +85,14 @@ public class DocNotificationAdapter extends RecyclerView.Adapter<DocNotification
         return bookingModels.size();
     }
 
-    public class myViewHolder extends RecyclerView.ViewHolder {
-        TextView name;
+    public static class myViewHolder extends RecyclerView.ViewHolder {
+        TextView name, status;
         MaterialButton openBtn;
 
         public myViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.name);
+            status = itemView.findViewById(R.id.status);
             openBtn = itemView.findViewById(R.id.openBtn);
         }
     }

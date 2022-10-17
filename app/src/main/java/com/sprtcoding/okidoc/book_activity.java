@@ -13,6 +13,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
@@ -37,6 +38,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.sprtcoding.okidoc.FCM.FCMNotificationSender;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -60,7 +62,7 @@ public class book_activity extends AppCompatActivity {
     private LinearLayout uploadBtn;
     private StorageReference storageReference;
     Uri MyUri;
-    private String myUri, bookID;
+    private String myUri, bookID, userToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -202,6 +204,7 @@ public class book_activity extends AppCompatActivity {
                 assert bookID != null;
                 bookRef.child(docUID).child(mUser.getUid()).child(bookID).setValue(map).addOnCompleteListener(task -> {
                     if(task.isSuccessful()) {
+                        sendBookingNotification(docUID, patientName);
                         docNotificationRef.child(docUID).child(bookID).setValue(map);
                         loadingBar.dismiss();
                         Toast.makeText(this, "Booked successfully.", Toast.LENGTH_SHORT).show();
@@ -341,6 +344,32 @@ public class book_activity extends AppCompatActivity {
 
             reasonCTV.setAdapter(adapter1);
         }
+    }
+
+    private void sendBookingNotification(String docUID, String patientName) {
+        FirebaseDatabase.getInstance().getReference("UserToken").child(docUID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()) {
+                    userToken = snapshot.child("token").getValue(String.class);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(book_activity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            FCMNotificationSender.sendNotification(
+                    getApplicationContext(),
+                    userToken,
+                    "OkiDoc",
+                    patientName + " book an appointment"
+            );
+        }, 3000);
     }
 
     private void initiate() {

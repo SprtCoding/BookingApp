@@ -87,22 +87,20 @@ public class doc_notif_Fragment extends Fragment {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if(snapshot.exists()) {
-                        if(snapshot.exists()) {
-                            bookingModels.clear();
-                            notif_recycle.setVisibility(View.VISIBLE);
-                            no_data.setVisibility(View.GONE);
-                            for(DataSnapshot ds : snapshot.getChildren()) {
-                                BookingModel book = ds.getValue(BookingModel.class);
-                                bookingModels.add(book);
-                            }
-                            docNotificationAdapter = new DocNotificationAdapter(getContext(), bookingModels);
-                            notif_recycle.scrollToPosition(bookingModels.size()-1);
-                            new Handler().postDelayed(() -> notif_recycle.smoothScrollToPosition(bookingModels.size()-1),350);
-                            notif_recycle.setAdapter(docNotificationAdapter);
-                        }else {
-                            notif_recycle.setVisibility(View.GONE);
-                            no_data.setVisibility(View.VISIBLE);
+                        bookingModels.clear();
+                        notif_recycle.setVisibility(View.VISIBLE);
+                        no_data.setVisibility(View.GONE);
+                        for(DataSnapshot ds : snapshot.getChildren()) {
+                            BookingModel book = ds.getValue(BookingModel.class);
+                            bookingModels.add(book);
                         }
+                        docNotificationAdapter = new DocNotificationAdapter(getContext(), bookingModels);
+                        notif_recycle.scrollToPosition(bookingModels.size()-1);
+                        new Handler().postDelayed(() -> notif_recycle.smoothScrollToPosition(bookingModels.size()-1),350);
+                        notif_recycle.setAdapter(docNotificationAdapter);
+                    }else {
+                        notif_recycle.setVisibility(View.GONE);
+                        no_data.setVisibility(View.VISIBLE);
                     }
                 }
 

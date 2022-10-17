@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class login_activity extends AppCompatActivity {
     private TextInputEditText emailET, passwordET;
@@ -30,7 +31,7 @@ public class login_activity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser mUSer;
     private FirebaseDatabase mDb;
-    private DatabaseReference userRef;
+    private DatabaseReference userRef, tokenRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,7 @@ public class login_activity extends AppCompatActivity {
         //firebase realtime db instance
         mDb = FirebaseDatabase.getInstance();
         userRef = mDb.getReference("Users");
+        tokenRef = mDb.getReference("UserToken");
         //firebase auth
         mAuth = FirebaseAuth.getInstance();
 
@@ -71,6 +73,19 @@ public class login_activity extends AppCompatActivity {
                             if(task.isSuccessful()) {
                                 mUSer = mAuth.getCurrentUser();
                                 assert mUSer != null;
+
+                                FirebaseMessaging.getInstance().getToken()
+                                        .addOnCompleteListener(task1 -> {
+                                            if (!task1.isSuccessful()) {
+                                                Toast.makeText(login_activity.this, "Fetching FCM registration token failed" + task.getException(), Toast.LENGTH_SHORT).show();
+                                                return;
+                                            }
+
+                                            // Get new FCM registration token
+                                            String token = task1.getResult();
+                                            tokenRef.child(mAuth.getCurrentUser().getUid()).child("token").setValue(token);
+                                        });
+
                                 userRef.child(mUSer.getUid()).addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {

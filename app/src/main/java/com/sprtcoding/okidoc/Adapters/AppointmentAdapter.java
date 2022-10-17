@@ -74,9 +74,7 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
             holder.myBtn.setText("View Details");
             holder.myBtn.setTextColor(Color.rgb(6, 190, 222));
             holder.myBtn.setIconTintResource(R.color.color3);
-            holder.myBtn.setOnClickListener(view -> {
-                Toast.makeText(mContext, "View Details", Toast.LENGTH_SHORT).show();
-            });
+            holder.myBtn.setOnClickListener(view -> Toast.makeText(mContext, "View Details", Toast.LENGTH_SHORT).show());
         }else if(appointment.getStatus().equals("Not-Approved")) {
             holder.myBtn.setText("Book Again");
             holder.myBtn.setTextColor(Color.rgb(6, 190, 222));
@@ -99,16 +97,14 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
                         .setCancelable(true)
                         .setPositiveButton("Yes", (dialogInterface, i) -> {
                             android.os.Handler handler = new Handler();
-                            handler.postDelayed(() -> {
-                                bookRef.child(docUID).child(mUser.getUid()).child(appointment.getBookID()).removeValue()
-                                        .addOnCompleteListener(task -> {
-                                            if(task.isSuccessful()) {
-                                                loadingBar.dismiss();
-                                                docNotificationRef.child(docUID).child(appointment.getBookID()).removeValue();
-                                                Toast.makeText(mContext, "Booking Cancel Successfully.", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                            }, 3000);
+                            handler.postDelayed(() -> bookRef.child(docUID).child(mUser.getUid()).child(appointment.getBookID()).removeValue()
+                                    .addOnCompleteListener(task -> {
+                                        if(task.isSuccessful()) {
+                                            loadingBar.dismiss();
+                                            docNotificationRef.child(docUID).child(appointment.getBookID()).removeValue();
+                                            Toast.makeText(mContext, "Booking Cancel Successfully.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }), 3000);
                         })
                         .setNegativeButton("No", (dialogInterface, i) -> {
                             loadingBar.dismiss();
@@ -124,7 +120,7 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
         return bookingModels.size();
     }
 
-    public class myViewHolder extends RecyclerView.ViewHolder {
+    public static class myViewHolder extends RecyclerView.ViewHolder {
         MaterialButton myBtn;
         TextView reason, date, time, status;
 

@@ -51,7 +51,7 @@ public class book_activity extends AppCompatActivity {
     private TextView clinicName, clinicLocation, filename;
     private MaterialButton dateBtn, timeBtn, bookBtn;
     Intent i;
-    String clinicNames, clinicLocations , docUID = "vkWUXCFaWJdRZBBBzGwgAb8vtTn1", patientName;
+    String clinicNames, clinicLocations , docUID = "vkWUXCFaWJdRZBBBzGwgAb8vtTn1", patientName, patientNumber;
     int t1Hour, t1Minute, SELECT_PHOTO = 1;
     private ProgressDialog loadingBar;
     private FirebaseAuth mAuth;
@@ -97,6 +97,7 @@ public class book_activity extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if(snapshot.exists()) {
                         patientName = snapshot.child("Fullname").getValue(String.class);
+                        patientNumber = snapshot.child("Phone").getValue(String.class);
                     }
                 }
 
@@ -190,11 +191,16 @@ public class book_activity extends AppCompatActivity {
                 Toast.makeText(this, "select time of booking", Toast.LENGTH_SHORT).show();
                 loadingBar.dismiss();
             }else {
+                String currentDate = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault()).format(new Date());
+                String currentTime = new SimpleDateFormat("hh:mm aa", Locale.getDefault()).format(new Date());
                 bookID = bookRef.push().getKey();
                 uploadImage();
                 HashMap<String, Object> map = new HashMap<>();
+                map.put("date", currentDate);
+                map.put("time", currentTime);
                 map.put("who", whoTV);
                 map.put("Name", patientName);
+                map.put("PatientNumber", patientNumber);
                 map.put("reason", reasonTV);
                 map.put("dateOfBooking", dateTV);
                 map.put("timeOfBooking", timeTV);

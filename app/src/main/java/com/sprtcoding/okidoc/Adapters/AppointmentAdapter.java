@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,13 +70,18 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
         holder.time.setText(appointment.getTimeOfBooking());
         holder.reason.setText(appointment.getReason());
         holder.status.setText(appointment.getStatus());
+        holder.dateNow.setText(appointment.getDate());
+        holder.timeNow.setText(appointment.getTime());
 
         if(appointment.getStatus().equals("Approved")) {
+            holder.declineLayout.setVisibility(View.GONE);
             holder.myBtn.setText("View Details");
             holder.myBtn.setTextColor(Color.rgb(6, 190, 222));
             holder.myBtn.setIconTintResource(R.color.color3);
             holder.myBtn.setOnClickListener(view -> Toast.makeText(mContext, "View Details", Toast.LENGTH_SHORT).show());
         }else if(appointment.getStatus().equals("Not-Approved")) {
+            holder.declineLayout.setVisibility(View.VISIBLE);
+            holder.declineMessage.setText(appointment.getDeclineMessage());
             holder.myBtn.setText("Book Again");
             holder.myBtn.setTextColor(Color.rgb(6, 190, 222));
             holder.myBtn.setIconTintResource(R.color.color3);
@@ -122,15 +128,20 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 
     public static class myViewHolder extends RecyclerView.ViewHolder {
         MaterialButton myBtn;
-        TextView reason, date, time, status;
+        TextView reason, date, time, status, dateNow, timeNow, declineMessage;
+        LinearLayout declineLayout;
 
         public myViewHolder(@NonNull View itemView) {
             super(itemView);
+            declineMessage = itemView.findViewById(R.id.declineMessage);
+            declineLayout = itemView.findViewById(R.id.declineLayout);
             myBtn = itemView.findViewById(R.id.myBtn);
             reason = itemView.findViewById(R.id.reason);
             date = itemView.findViewById(R.id.date);
             time = itemView.findViewById(R.id.time);
             status = itemView.findViewById(R.id.status);
+            dateNow = itemView.findViewById(R.id.dateNow);
+            timeNow = itemView.findViewById(R.id.timeNow);
         }
     }
 }

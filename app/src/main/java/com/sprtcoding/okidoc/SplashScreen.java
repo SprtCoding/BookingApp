@@ -15,21 +15,24 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class SplashScreen extends AppCompatActivity {
     private FirebaseUser mUSer;
+    private FirebaseAuth mAuth;
     private FirebaseDatabase mDb;
-    private DatabaseReference userRef;
+    private DatabaseReference userRef, tokenRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         mUSer = mAuth.getCurrentUser();
         //firebase realtime db instance
         mDb = FirebaseDatabase.getInstance();
         userRef = mDb.getReference("Users");
+        tokenRef = mDb.getReference("UserToken");
     }
 
     @Override
@@ -46,6 +49,17 @@ public class SplashScreen extends AppCompatActivity {
                         if(stat.equals("Doctor")) {
                             Handler handler = new Handler();
                             handler.postDelayed(() -> {
+                                FirebaseMessaging.getInstance().getToken()
+                                        .addOnCompleteListener(task1 -> {
+                                            if (!task1.isSuccessful()) {
+                                                Toast.makeText(SplashScreen.this, "Fetching FCM registration token failed" + task1.getException(), Toast.LENGTH_SHORT).show();
+                                                return;
+                                            }
+
+                                            // Get new FCM registration token
+                                            String token = task1.getResult();
+                                            tokenRef.child(mUSer.getUid()).child("token").setValue(token);
+                                        });
                                 Intent i = new Intent(SplashScreen.this, MainActivity.class);
                                 startActivity(i);
                                 finish();
@@ -53,6 +67,17 @@ public class SplashScreen extends AppCompatActivity {
                         }else if(stat.equals("Patient")) {
                             Handler handler = new Handler();
                             handler.postDelayed(() -> {
+                                FirebaseMessaging.getInstance().getToken()
+                                        .addOnCompleteListener(task1 -> {
+                                            if (!task1.isSuccessful()) {
+                                                Toast.makeText(SplashScreen.this, "Fetching FCM registration token failed" + task1.getException(), Toast.LENGTH_SHORT).show();
+                                                return;
+                                            }
+
+                                            // Get new FCM registration token
+                                            String token = task1.getResult();
+                                            tokenRef.child(mUSer.getUid()).child("token").setValue(token);
+                                        });
                                 Intent i = new Intent(SplashScreen.this, patient_dashboard.class);
                                 startActivity(i);
                                 finish();

@@ -9,6 +9,7 @@
         <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/drawable/outline_calendar_month_20.xml" value="0.1" />
         <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/drawable/outline_info_24.xml" value="0.1" />
         <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/drawable/outline_logout_20.xml" value="0.1" />
+        <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/layout/activity_accepted_patient_list.xml" value="0.144017094017094" />
         <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/layout/activity_book.xml" value="0.22" />
         <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/layout/activity_login.xml" value="0.22" />
         <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/layout/activity_main.xml" value="0.16666666666666666" />
@@ -17,18 +18,20 @@
         <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/layout/activity_register.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/layout/activity_splash_screen.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/layout/alert_dialog.xml" value="0.22" />
-        <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/layout/appointment_layout.xml" value="0.144017094017094" />
+        <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/layout/appointment_layout.xml" value="0.22" />
         <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/layout/doc_notif_layout.xml" value="0.22" />
         <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/layout/dropdown_item.xml" value="0.144017094017094" />
         <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/layout/fragment_doc_about_.xml" value="0.13247863247863248" />
         <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/layout/fragment_doc_message_.xml" value="0.13247863247863248" />
         <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/layout/fragment_doc_notif_.xml" value="0.144017094017094" />
-        <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/layout/fragment_doctor_home_.xml" value="0.14666666666666667" />
+        <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/layout/fragment_doctor_home_.xml" value="0.22" />
         <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/layout/fragment_patient_about.xml" value="0.13247863247863248" />
         <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/layout/fragment_patient_appointment.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/layout/fragment_patient_home.xml" value="0.22" />
         <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/layout/fragment_patient_profile.xml" value="0.22" />
         <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/layout/message_dialog.xml" value="0.22" />
+        <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/layout/reminder_layout.xml" value="0.144017094017094" />
+        <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/layout/set_reminder_dialog.xml" value="0.144017094017094" />
         <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/menu/bottom_nav_bar_menu.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/adrle/AndroidStudioProjects/OkiDoc/app/src/main/res/menu/bottom_nav_bar_patient.xml" value="0.14316239316239315" />
       </map>

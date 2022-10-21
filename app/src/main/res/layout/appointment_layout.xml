@@ -20,6 +20,33 @@
         android:textSize="35sp"
         android:textStyle="bold" />
 
+    <LinearLayout
+        android:gravity="end"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_marginEnd="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="date"
+            android:textSize="20sp"
+            android:fontFamily="@font/lora"
+            android:textColor="@color/black"
+            android:id="@+id/dateNow"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="time"
+            android:textSize="20sp"
+            android:fontFamily="@font/lora"
+            android:textColor="@color/black"
+            android:id="@+id/timeNow"/>
+
+    </LinearLayout>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -83,6 +110,33 @@
             android:fontFamily="@font/lora"
             android:textColor="@color/black"
             android:id="@+id/status"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/declineLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reason of Decline"
+            android:textSize="22sp"
+            android:fontFamily="@font/lora"
+            android:textColor="@color/red"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="msg"
+            android:textSize="20sp"
+            android:fontFamily="@font/lora"
+            android:textColor="@color/black"
+            android:id="@+id/declineMessage"/>
 
     </LinearLayout>
 

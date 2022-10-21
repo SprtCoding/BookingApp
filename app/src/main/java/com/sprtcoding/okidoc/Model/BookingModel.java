@@ -9,11 +9,15 @@ public class BookingModel {
     String userID;
     String bookID;
     String Name;
+    String date;
+    String time;
+    String DeclineMessage;
+    String PatientNumber;
 
     public BookingModel() {
     }
 
-    public BookingModel(String who, String reason, String dateOfBooking, String timeOfBooking, String status, String userID, String bookID, String name) {
+    public BookingModel(String who, String reason, String dateOfBooking, String timeOfBooking, String status, String userID, String bookID, String name, String date, String time, String declineMessage, String patientNumber) {
         this.who = who;
         this.reason = reason;
         this.dateOfBooking = dateOfBooking;
@@ -21,7 +25,27 @@ public class BookingModel {
         this.status = status;
         this.userID = userID;
         this.bookID = bookID;
-        this.Name = name;
+        Name = name;
+        this.date = date;
+        this.time = time;
+        DeclineMessage = declineMessage;
+        PatientNumber = patientNumber;
+    }
+
+    public String getPatientNumber() {
+        return PatientNumber;
+    }
+
+    public String getDeclineMessage() {
+        return DeclineMessage;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getTime() {
+        return time;
     }
 
     public String getName() {

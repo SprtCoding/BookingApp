@@ -77,7 +77,7 @@ public class login_activity extends AppCompatActivity {
                                 FirebaseMessaging.getInstance().getToken()
                                         .addOnCompleteListener(task1 -> {
                                             if (!task1.isSuccessful()) {
-                                                Toast.makeText(login_activity.this, "Fetching FCM registration token failed" + task.getException(), Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(login_activity.this, "Fetching FCM registration token failed" + task1.getException(), Toast.LENGTH_SHORT).show();
                                                 return;
                                             }
 

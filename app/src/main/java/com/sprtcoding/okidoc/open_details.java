@@ -30,7 +30,7 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 
 public class open_details extends AppCompatActivity {
-    private TextView name, reason, date, time, status;
+    private TextView name, reason, date, time, status, phone;
     private ImageView pic;
     private MaterialButton acceptBtn, declineBtn;
     private FirebaseAuth mAuth;
@@ -40,7 +40,7 @@ public class open_details extends AppCompatActivity {
     private ProgressDialog declineLoadingBar, acceptLoading;
     AlertDialog alertDialog;
     Intent i;
-    String patientName, patientReason, DateOfBooking, TimeOfBooking, StatusOfBooking, BookID, UserID, Who, DocName, declineID, userToken;
+    String patientName, patientReason, DateOfBooking, TimeOfBooking, StatusOfBooking, BookID, UserID, Who, DocName, declineID, userToken, patientPhone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +63,7 @@ public class open_details extends AppCompatActivity {
 
         // get string extra
         i = getIntent();
+        patientPhone = i.getStringExtra("phoneNumber");
         patientName = i.getStringExtra("name");
         patientReason = i.getStringExtra("reason");
         DateOfBooking = i.getStringExtra("date");
@@ -79,6 +80,7 @@ public class open_details extends AppCompatActivity {
         userRef = mDb.getReference("Users");
 
         name.setText(patientName);
+        phone.setText(patientPhone);
         if(mUser != null) {
             docNotifRef.child(mUser.getUid()).child(BookID).addValueEventListener(new ValueEventListener() {
                 @Override
@@ -159,6 +161,7 @@ public class open_details extends AppCompatActivity {
                             declineLoadingBar.dismiss();
                             HashMap<String, Object> map = new HashMap<>();
                             map.put("status", "Not-Approved");
+                            map.put("DeclineMessage", message);
                             patientBookingRef.child(mUser.getUid()).child(UserID).child(BookID).updateChildren(map);
                             docNotifRef.child(mUser.getUid()).child(BookID).removeValue();
                             finish();
@@ -260,7 +263,14 @@ public class open_details extends AppCompatActivity {
         }, 3000);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+    }
+
     private void initialize() {
+        phone = findViewById(R.id.phone);
         name = findViewById(R.id.name);
         reason = findViewById(R.id.reason);
         date = findViewById(R.id.date);
